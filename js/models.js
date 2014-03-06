@@ -323,10 +323,24 @@ var Models = new function() {
             }, cbSuccess, cbError);
         };
         
-        this.getContent = function(html) {
+        this.updateResourceData = function(guid, data, cbSuccess, cbError) {
+            if (!self.data_resources) {
+                return;
+            }
+            for (var i = 0, l = self.data_resources.length; i < l; i++) {
+                if (self.data_resources[i].guid === guid) {
+                    self.data_resources[i].data.body = data;
+                }
+            }
+            self.set({
+                resources : self.getResources()
+            }, cbSuccess, cbError);
+        }
+        
+        this.getContent = function(html, loadResources) {
             if (html) {
                 if (html_content.length == 0) {
-                    html_content = Evernote.enml2html(self).replace(/\n/gi, "<br/>");
+                    html_content = Evernote.enml2html(self, loadResources).replace(/\n/gi, "<br/>");
                 }
                 return html_content;
             }
