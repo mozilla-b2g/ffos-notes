@@ -28,10 +28,12 @@ var Evernote = new function() {
         expires,
         last_update_count,
         last_sync_time,
-
+        sync_try_count,
+        
         syncChunks = [],
         totalSyncChunks = 0,
         syncMaxEntries = 100,
+        syncMaxTries = 2,
         firstUSN = 0,
         currentUSN = 0,
         lastChunkUSN = 0,
@@ -64,7 +66,8 @@ var Evernote = new function() {
         expires = user.getExpires();
         last_update_count = user.getLastUpdateCount();
         last_sync_time = user.getLastSyncTime();
-
+        sync_try_count = user.getSyncTryCount();
+        
         if (App.DEBUG) {
             Console.log('Evernote.init()');
             Console.log('oauth_token: '+oauth_token);
@@ -225,7 +228,8 @@ var Evernote = new function() {
 
         last_update_count = App.getUser().getLastUpdateCount();
         last_sync_time = App.getUser().getLastSyncTime();
-
+        sync_try_count = App.getUser().getSyncTryCount();
+        
         var callback = self.getSyncState;
         if (last_sync_time == 0) {
             callback = self.startFullSync;
@@ -239,7 +243,8 @@ var Evernote = new function() {
             user.expires = expires;
             user.last_update_count = last_update_count;
             user.last_sync_time = last_sync_time;
-
+            user.sync_try_count = sync_try_count;
+            
             App.onLogin();
 
             App.updateUserData(user, callback);
@@ -278,6 +283,14 @@ var Evernote = new function() {
     };
 
     this.getSyncChunk = function(usn, max, full, c) {
+        if (sync_try_count >= syncMaxTries) {
+            if (!TEXTS) {
+                self.setupTexts();
+            }
+            alert(TEXTS.SYNC_FAILED);
+            self.logout();
+            return;
+        }
         if (!navigator.onLine) {
             if (!TEXTS) {
                 self.setupTexts();
@@ -285,6 +298,10 @@ var Evernote = new function() {
             alert(TEXTS.NOT_REACHED_EVERNOTE);
             return;
         }
+        App.updateUserData({
+            sync_try_count : sync_try_count + 1
+        });
+
         App.startSync();
         if (App.DEBUG) {
             Console.log('this.getSyncChunk oauth_token: ' + JSON.stringify(oauth_token));
@@ -621,7 +638,8 @@ var Evernote = new function() {
         App.stopSync();
         App.updateUserData({
             last_update_count : last_update_count,
-            last_sync_time : last_sync_time
+            last_sync_time : last_sync_time,
+            sync_try_count : 0
         }, self.sendChanges);
     };
     this.resourceLoaded = function(resource) {
@@ -1029,7 +1047,8 @@ var Evernote = new function() {
         TEXTS = {
             "NOT_REACHED_EVERNOTE": navigator.mozL10n.get("not-reached-evernote"),
             "NOTEBOOK_DELETE_CONFLICT": navigator.mozL10n.get("notebook-delete-conflict"),
-            "GENERIC_CONFLICT": navigator.mozL10n.get("generic-conflict")
+            "GENERIC_CONFLICT": navigator.mozL10n.get("generic-conflict"),
+            "SYNC_FAILED": navigator.mozL10n.get("sync-failed")
         };
     };
 

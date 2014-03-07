@@ -206,7 +206,8 @@ var App = new function() {
             "ADD_IMAGE_TITLE": navigator.mozL10n.get("add-image-title"),
             "IMAGE_NOT_SUPPORTED": navigator.mozL10n.get("image-not-supported"),
             "PHOTO_LABEL": navigator.mozL10n.get("image-label"),
-            "NOTEBOOK_NAME_ALREADY_EXISTS": navigator.mozL10n.get("notebook-name-already-exists")
+            "NOTEBOOK_NAME_ALREADY_EXISTS": navigator.mozL10n.get("notebook-name-already-exists"),
+            "NOTE_UNSAVEABLE": navigator.mozL10n.get("note-unsaveable")
         };
 
         ORDERS = [
@@ -506,10 +507,18 @@ var App = new function() {
     function onNoteSave(noteAffected) {
         self.showNotes();
         NotebooksList.refresh();
-        self.addQueue('Note', noteAffected);
+        if (noteAffected) {
+            self.addQueue('Note', noteAffected);
+        }
     }
 
     function onNoteCancel(noteAffected, isChanged) {
+        if (isChanged && NoteView.currentNoteUnsaveable()) {
+            if (confirm(TEXTS.NOTE_UNSAVEABLE)) {
+                cards.goTo(cards.CARDS.MAIN);
+            }
+            return;
+        }
         if (isChanged && confirm(TEXTS.NOTE_CANCEL_CHANGES)) {
             NoteView.save();
             return;
@@ -867,6 +876,13 @@ var App = new function() {
         };
 
         this.save = function() {
+            if (self.changed() && self.currentNoteUnsaveable()) {
+                if (confirm(TEXTS.NOTE_UNSAVEABLE)) {
+                    onSave && onSave(null);
+                }
+                return;
+            }
+
             var content = elContent.innerHTML,
                 name = (elEditTitle.value || elTitle.innerHTML).replace(/&amp;/g, "&");
 
@@ -920,11 +936,10 @@ var App = new function() {
 
         this.changed = function() {
             // Have to convert contents to DOM tree in order to compare properly
-            var wrapper= document.createElement('div');
-            wrapper.innerHTML= noteContentBeforeEdit;
-            var htmlContentBeforeEdit= wrapper.firstChild;
-            wrapper.innerHTML= elContent.innerHTML;
-            var htmlContentAfterEdit= wrapper.firstChild;
+            var htmlContentBeforeEdit= document.createElement('div');
+            htmlContentBeforeEdit.innerHTML= noteContentBeforeEdit;
+            var htmlContentAfterEdit= document.createElement('div');
+            htmlContentAfterEdit.innerHTML= elContent.innerHTML;
 
             if (htmlContentBeforeEdit == null || htmlContentAfterEdit == null) {
                 return noteContentBeforeEdit !== elContent.innerHTML || noteNameBeforeEdit !== elEditTitle.value;
@@ -933,6 +948,10 @@ var App = new function() {
             }
         };
 
+        this.currentNoteUnsaveable = function() {
+            return currentNote.isMissingResourceData();
+        };
+        
         function onContentKeyUp(e) {
             if (elContent.innerHTML) {
                 elSave.classList.add(CLASS_WHEN_VISIBLE);
