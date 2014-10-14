@@ -1,7 +1,7 @@
 {
   "name": "Notes",
   "description": "Notes app",
-  "version": "2.2.5",
+  "version": "2.2.7",
   "launch_path": "/index.html",
   "type": "privileged",
   "redirects": [
@@ -22,7 +22,7 @@
     }
   },
   "developer": {
-    "name": "Mozilla",
+    "name": "Mozilla Apps",
     "url": "http://www.mozilla.org/firefox/os/"
   },
   "orientation": "portrait",
