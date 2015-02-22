@@ -1094,13 +1094,21 @@ var App = new function() {
         this.currentNoteUnsaveable = function() {
             return currentNote.isMissingResourceData();
         };
+        
+        this.showDoneButton = function(){
+            elSave.classList.add(CLASS_WHEN_VISIBLE);
+        }; 
+         
+        this.hideDoneButton = function(){
+            elSave.classList.remove(CLASS_WHEN_VISIBLE);
+        };
 
         function onContentKeyUp(e) {
             if (elContent.innerHTML) {
-                elSave.classList.add(CLASS_WHEN_VISIBLE);
+                NoteView.showDoneButton();
                 !elEditTitle.value && (html(elTitle, getNoteNameFromContent(elContent.innerHTML)));
             } else {
-                elSave.classList.remove(CLASS_WHEN_VISIBLE);
+                NoteView.hideDoneButton();
                 self.setTitle();
             }
         }
@@ -1658,6 +1666,7 @@ var App = new function() {
 
                 act.onsuccess = function() {
                     if (!act.result.blob) return;
+                    NoteView.showDoneButton();
 
                     var reader = new FileReader();
                     reader.readAsArrayBuffer(act.result.blob);
