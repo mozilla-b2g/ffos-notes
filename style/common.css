@@ -241,6 +241,7 @@ section[role="region"] > header:first-child menu[type="toolbar"] {
             }
 
     #note #button-note-save {
+        color: white;
         opacity: 0;
         pointer-events: none;
         -moz-transition: opacity 150ms linear;
