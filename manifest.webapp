@@ -14,12 +14,6 @@
     "systemXHR": {
       "description": "Access Evernote API"
     },
-    "storage": {
-      "description": "Get unlimited IndexedDB storage size",
-      "substitute": [
-        "indexedDB-unlimited"
-      ]
-    }
   },
   "developer": {
     "name": "Mozilla Apps",
