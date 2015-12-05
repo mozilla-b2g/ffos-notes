@@ -423,6 +423,7 @@ var App = new function() {
 
     this.onLogin = function() {
         document.body.classList.add('loggedin');
+        document.getElementById("theme-color").setAttribute('content','#82c23a');
     };
 
     this.pendingResourceData = function(guid) {
