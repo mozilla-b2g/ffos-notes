@@ -1,7 +1,7 @@
 {
   "name": "Notes",
   "description": "Notes app",
-  "version": "2.2.7",
+  "version": "2.3.0",
   "launch_path": "/index.html",
   "type": "privileged",
   "redirects": [
