@@ -68,6 +68,10 @@
       "name": "Нотатки",
       "description": "Нотатки - це офіційна програма Firefox OS. Нотатки створено, щоб допомогти зберегти всі ідеї, нагадування та моменти натхнення, тримаючи їх всі на пристрої, яким ви користуєтесь щодня. Маючи доступ до своїх нотаток, ви зможете організувати свій час з найменшими зусиллями."
     },
+    "fy-NL": {
+      "name": "Notysjes", 
+      "description": "Notysjes is de offisjele Firefox OS-app. Notysjes is makke om jo te helpen om alle ideeën, omtinken en mominten fan ynspiraasje te bewarjen - mei it gemak dit by te hâlden gewoanwei op jo daaglikse apparaat. Mei de mooglikheid yn alles te sykjen kinne jo folslein organisearre bliuwe mei minimale ynspanning."
+    },
     "ca": {
       "name": "Notes",
       "description": "Notes és l'aplicació oficial de Firefox OS. Notes ha estat dissenyada per ajudar a preservar totes aquelles idees, recordatoris i moments d'inspiració, tot mantenint un registre ben accessible justament  al vostre dispositiu d'ús diari. Equipat amb un cercador amb el que podreu trobar-ho tot i amb la possibilitat d'agrupar les vostres notes en blocs diferents, podeu organitzar-vos amb el mínim esforç."
